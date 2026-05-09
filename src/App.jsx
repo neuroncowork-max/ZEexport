@@ -9,6 +9,7 @@ export default function ZEExportWebsite() {
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeCategory, setActiveCategory] = useState('fresh'); // ⭐ NEW : onglet actif
+  const [showFairPopup, setShowFairPopup] = useState(false); // 🎉 popup foire
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,7 +18,18 @@ export default function ZEExportWebsite() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  useEffect(() => {
+    const seen = sessionStorage.getItem('zeFairPopup_2026');
+    if (!seen) {
+      const timer = setTimeout(() => setShowFairPopup(true), 1200);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
+  const closeFairPopup = () => {
+    setShowFairPopup(false);
+    sessionStorage.setItem('zeFairPopup_2026', 'true');
+  };
   // ============================================================
   // TRADUCTIONS FR / EN / DE
   // ============================================================
@@ -26,6 +38,14 @@ export default function ZEExportWebsite() {
     // 🇫🇷 FRANÇAIS
     // ============================================================
     fr: {
+            popup: {
+        title: "Foire Internationale TUTOOFOOD",
+        subtitle: "Mila — Pavillon de l'Algérie",
+        date: "Du 11 au 14 mai 2026",
+        description: "Notre entreprise participera et exposera à la foire internationale TUTOOFOOD à Mila du 11 au 14 mai 2026 au Pavillon de l'Algérie. Nous vous invitons chaleureusement à visiter notre stand pour déguster et découvrir nos produits authentiques.",
+        cta: "Au plaisir de vous y rencontrer !",
+        close: "Fermer"
+      },
       nav: {
         about: "À Propos",
         products: "Produits",
@@ -322,6 +342,14 @@ export default function ZEExportWebsite() {
     // 🇬🇧 ENGLISH
     // ============================================================
     en: {
+            popup: {
+        title: "TUTOOFOOD International Fair",
+        subtitle: "Mila — Algeria Pavilion",
+        date: "May 11–14, 2026",
+        description: "Our company will be participating and exhibiting at the TUTOOFOOD international fair in Mila from May 11 to 14, 2026 at the Algeria Pavilion. We warmly invite you to visit our stand to taste and discover our authentic products.",
+        cta: "Looking forward to meeting you there!",
+        close: "Close"
+      },
       nav: {
         about: "About",
         products: "Products",
@@ -613,6 +641,14 @@ export default function ZEExportWebsite() {
     // 🇩🇪 DEUTSCH
     // ============================================================
     de: {
+            popup: {
+        title: "Internationale Messe TUTOOFOOD",
+        subtitle: "Mila — Algerien-Pavillon",
+        date: "Vom 11. bis 14. Mai 2026",
+        description: "Unser Unternehmen nimmt an der internationalen Messe TUTOOFOOD in Mila vom 11. bis 14. Mai 2026 im Algerien-Pavillon teil und stellt dort aus. Wir laden Sie herzlich ein, unseren Stand zu besuchen, um unsere authentischen Produkte zu probieren und zu entdecken.",
+        cta: "Wir freuen uns auf Ihren Besuch!",
+        close: "Schließen"
+      },
       nav: {
         about: "Über uns",
         products: "Produkte",
@@ -944,8 +980,8 @@ export default function ZEExportWebsite() {
     { id: 'olivesVertesEntieres', category: 'others', image: '/assets/AutreProduit/Marine/D3.png',  sizes: '350g, 700g' },
     { id: 'macedoine',            category: 'others', image: '/assets/AutreProduit/Marine/D4.png',  sizes: '400g' },
     { id: 'maisDoux',             category: 'others', image: '/assets/AutreProduit/Marine/D5.png',  sizes: '340g' },
-    { id: 'safran',               category: 'others', image: '/assets/AutreProduit/Safran/D1.png',  sizes: '1g, 5g' },
-    { id: 'saucesPiments',        category: 'others', image: '/assets/AutreProduit/Sauces/D1.png',  sizes: '200ml' },
+    { id: 'safran',               category: 'others', image: '/assets/AutreProduit/Safran/D1.jpeg',  sizes: '1g, 5g' },
+    { id: 'saucesPiments',        category: 'others', image: '/assets/AutreProduit/Sauces/D1.jpg',  sizes: '200ml' },
   ];
 
   // Configuration visuelle des catégories
@@ -966,7 +1002,63 @@ export default function ZEExportWebsite() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 font-sans">
+{/* ========== 🎉 POPUP FOIRE TUTOOFOOD ========== */}
+      {showFairPopup && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          {/* Overlay sombre cliquable pour fermer */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fade-in"
+            onClick={closeFairPopup}
+          ></div>
 
+          {/* Carte du popup */}
+          <div className="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden animate-slide-up border-2 border-blue-200/50">
+            {/* En-tête avec gradient */}
+            <div className="relative bg-gradient-to-br from-blue-700 via-indigo-700 to-blue-950 px-6 py-7 text-center overflow-hidden">
+              <div className="absolute -top-10 -left-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+              <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-amber-300/20 rounded-full blur-2xl"></div>
+
+              <button
+                onClick={closeFairPopup}
+                className="absolute top-3 right-3 text-white/80 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full z-10"
+                aria-label={t.popup.close}
+              >
+                <X size={22} />
+              </button>
+
+              <div className="relative">
+                <div className="text-5xl mb-3">🎉</div>
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 leading-tight">
+                  {t.popup.title}
+                </h3>
+                <p className="text-blue-100 text-base md:text-lg">
+                  📍 {t.popup.subtitle}
+                </p>
+              </div>
+            </div>
+
+            {/* Corps */}
+            <div className="p-6 md:p-8 text-center">
+              <div className="inline-block px-5 py-2 bg-gradient-to-r from-amber-100 to-orange-100 rounded-full text-amber-900 font-bold text-base md:text-lg mb-5 border border-amber-200 shadow-sm">
+                📅 {t.popup.date}
+              </div>
+              <p className="text-blue-900 text-base md:text-lg leading-relaxed mb-5">
+                {t.popup.description}
+              </p>
+              <p className="text-blue-700 italic font-medium mb-6">
+                ✨ {t.popup.cta}
+              </p>
+              <button
+                onClick={closeFairPopup}
+                className="px-8 py-3 bg-gradient-to-r from-blue-700 to-blue-950 text-white rounded-full font-semibold hover:shadow-xl transform hover:scale-105 transition-all"
+              >
+                {t.popup.close}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* ========== FIN POPUP FOIRE ========== */}
       {/* ========== Navigation ========== */}
       <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-6 py-0">
@@ -1208,7 +1300,8 @@ export default function ZEExportWebsite() {
                   onMouseLeave={() => setActiveProduct(null)}
                 >
                   {/* IMAGE adaptative — object-contain → conserve les proportions, fond doux */}
-                  <div className="relative w-full aspect-[4/3] bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-50/50 overflow-hidden flex items-center justify-center p-6">
+                  <div className="relative w-full aspect-square bg-gradient-to-br from-slate-50 via-blue-50/50 to-indigo-50/50 overflow-hidden flex items-center justify-center p-2">
+
                     {/* Glow décoratif au hover */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${catColor?.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
                     <img
@@ -1367,6 +1460,12 @@ export default function ZEExportWebsite() {
                 <a href="https://www.usda.gov/topics/organic" target="_blank" rel="noopener noreferrer" className="flex-shrink-0 transition-transform hover:scale-105 hover:shadow-xl duration-300">
                   <img src="/assets/1.png" alt="USDA Organic Certification" className="h-28 md:h-40 w-auto object-contain rounded-lg border border-blue-200 shadow-md" />
                 </a>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="flex-shrink-0 transition-transform hover:scale-105 hover:shadow-xl duration-300">
+  <img src="/assets/cert/D1.jpg" alt="Certificat 1" className="h-28 md:h-40 w-auto object-contain rounded-lg border border-blue-200 shadow-md" />
+</a>
+<a href="#" target="_blank" rel="noopener noreferrer" className="flex-shrink-0 transition-transform hover:scale-105 hover:shadow-xl duration-300">
+  <img src="/assets/cert/D2.jpeg" alt="Certificat 2" className="h-28 md:h-40 w-auto object-contain rounded-lg border border-blue-200 shadow-md" />
+</a>
               </div>
             </div>
           </div>
@@ -1492,6 +1591,11 @@ export default function ZEExportWebsite() {
         .animate-float-delayed  { animation: float 9s ease-in-out infinite; animation-delay: 2s; }
         .animate-fade-in        { animation: fade-in 0.5s ease-out both; }
         .animate-slide-down     { animation: slide-down 0.25s ease-out both; }
+        @keyframes slide-up {
+          from { opacity: 0; transform: translateY(30px) scale(0.95); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-slide-up { animation: slide-up 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
       `}</style>
     </div>
   );
